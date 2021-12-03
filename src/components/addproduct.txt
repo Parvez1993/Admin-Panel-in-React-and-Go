@@ -1,0 +1,166 @@
+import axios from "axios";
+import { useState } from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import { Button, Form, Input, Label, TextArea } from "semantic-ui-react";
+import List from "./List";
+
+function AddProducts() {
+  const [id, setId] = useState(0);
+  const [title, setTitle] = useState("");
+  const [price, setprice] = useState("");
+  const [description, setdescription] = useState("");
+  // const [category, setcategory] = useState("");
+  const [image, setimage] = useState({});
+  // const [rating, setrating] = useState("");
+
+  //const [size, setSize] = useState([]);
+  const [selectedItem, setSelectedItem] = useState([]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    // console.log("data", data);
+    data.append("id", id);
+    const payload = Object.fromEntries(data.entries());
+    console.log(payload);
+    console.log(JSON.stringify(payload));
+    const requestOptions = {
+      method: "POST",
+      body: JSON.stringify(payload),
+    };
+
+    await fetch("http://localhost:4000/v1/admin/editproduct", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+
+    data.append("image", image);
+    console.log("data", data);
+
+    const res2 = await axios.post("http://localhost:4000/image", data);
+    console.log(res2);
+  };
+  const sizeHandler = (e) => {
+    const name = e.target.value;
+    let selected = selectedItem;
+    selected[name] = e.target.checked;
+    setSelectedItem(selected);
+    console.log(selectedItem);
+    var result = [];
+    for (var i in selectedItem) result.push([i, selectedItem[i]]);
+    console.log(result);
+
+    var lol = Object.values(selectedItem);
+    console.log(lol);
+  };
+
+  return (
+    <Container>
+      <Row class="py-5">
+        <Col lg={3}>
+          <List />
+        </Col>
+        <Col lg={6}>
+          {" "}
+          <Form onSubmit={handleSubmit}>
+            <Form.Field>
+              <div>
+                <Label size="big">Title</Label>
+                <Input
+                  type="text"
+                  name="title"
+                  placeholder="title"
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
+            </Form.Field>
+
+            <Form.Field>
+              {" "}
+              <div>
+                <Label size="big">Price</Label>
+                <Input
+                  type="number"
+                  name="price"
+                  placeholder="price"
+                  onChange={(e) => setprice(e.target.value)}
+                />
+              </div>
+            </Form.Field>
+            <Form.Field>
+              {" "}
+              <div>
+                <Label size="big">Description</Label>
+                <TextArea
+                  placeholder="product details"
+                  name="description"
+                  onChange={(e) => setdescription(e.target.value)}
+                />
+              </div>
+            </Form.Field>
+            <Form.Field>
+              <input
+                type="checkbox"
+                name="S"
+                value="s"
+                onChange={sizeHandler}
+              />
+              S
+              <input
+                type="checkbox"
+                name="L"
+                value="l"
+                onChange={sizeHandler}
+              />
+              L
+            </Form.Field>
+            {/* <Form.Field>
+              {" "}
+              <div>
+                <Label size="big">Catgory</Label>
+                <select
+                  name="category"
+                  class="ui search dropdown"
+                  onChange={(e) => {
+                    const selectedcategory = e.target.value;
+                    setcategory(selectedcategory);
+                  }}
+                >
+                  <Label size="big">Upload File</Label>
+                  <option value="men">men</option>
+                  <option value="women">women</option>
+                </select>
+              </div>
+            </Form.Field>
+
+            <Form.Field>
+              {" "}
+              <div>
+                <Label size="big">Ratings</Label>
+                <Input
+                  type="number"
+                  name="rating"
+                  placeholder="rating"
+                  onChange={(e) => setrating(e.target.value)}
+                />
+              </div>
+            </Form.Field> */}
+            <Form.Field>
+              <Label size="big">Image</Label>
+              <Input
+                type="file"
+                name="image"
+                onChange={(e) => setimage(e.target.files[0])}
+                multiple="multiple"
+                placeholder="select image"
+              ></Input>
+            </Form.Field>
+            <Button size="big">Submit</Button>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
+  );
+}
+
+export default AddProducts;
