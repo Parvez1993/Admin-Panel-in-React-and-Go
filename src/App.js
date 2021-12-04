@@ -9,6 +9,7 @@ import SingleProduct from "./components/SingleProduct";
 import AddProducts from "./components/AddProducts";
 import "semantic-ui-css/semantic.min.css";
 import Adminlogin from "./components/Adminlogin";
+import Error from "./components/Error";
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/product/:id" element={<SingleProduct />} />
         <Route path="/addProducts/:id" element={<AddProducts />} />
         <Route path="/category" element={<Category />} />
+        <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>
   );

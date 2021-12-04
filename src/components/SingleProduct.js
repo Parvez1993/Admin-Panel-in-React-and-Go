@@ -113,6 +113,7 @@ function SingleProduct() {
       </Modal>
       <Container>
         {msg ? <Alert>{msg}</Alert> : ""}
+
         {products ? (
           <Row>
             <Col lg={6}>

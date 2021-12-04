@@ -102,7 +102,12 @@ function AddProducts() {
       selectedSize.push(name);
     }
 
-    setSelected(selectedSize);
+    let filteredArray = selectedSize.filter(function (item, pos) {
+      return selectedSize.indexOf(item) === pos;
+    });
+
+    setSelected(filteredArray);
+    // setSelected(selectedSize);
     console.log(selectedSize);
   };
 
