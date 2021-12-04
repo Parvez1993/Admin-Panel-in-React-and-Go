@@ -60,7 +60,8 @@ function AddProducts() {
       image === "" &&
       stock === "" &&
       selected === "" &&
-      shipping === ""
+      shipping === "" &&
+      category === ""
     ) {
       return window.alert("fill all the forms please");
     }
@@ -78,17 +79,15 @@ function AddProducts() {
       body: JSON.stringify(payload),
     };
 
+    data.append("image", image);
+
+    await axios.post("http://localhost:4000/image", data);
+
     await fetch("http://localhost:4000/v1/admin/editproduct", requestOptions)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
       });
-
-    data.append("image", image);
-    console.log("data", data);
-
-    const res2 = await axios.post("http://localhost:4000/image", data);
-    console.log(res2);
   };
 
   const onChange = (e, id) => {
