@@ -1,7 +1,7 @@
 import Dropdown from "@restart/ui/esm/Dropdown";
 import axios from "axios";
-import { useState } from "react";
-import { Col, Container, DropdownButton, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Alert, Col, Container, DropdownButton, Row } from "react-bootstrap";
 import {
   Button,
   Form,
@@ -44,9 +44,8 @@ function AddProducts() {
   //const [size, setSize] = useState([]);
   const [selected, setSelected] = useState([]);
   const [category, setCategory] = useState("");
-
+  const [shouldRender, setShouldRender] = useState(false);
   let categoryOptions = [
-    { id: "0", value: "category", text: "Choose Category" },
     { id: "1", value: "Men", text: "Men" },
     { id: "2", value: "Women", text: "Women" },
   ];
@@ -61,7 +60,7 @@ function AddProducts() {
       stock === "" &&
       selected === "" &&
       shipping === "" &&
-      category === ""
+      category === null
     ) {
       return window.alert("fill all the forms please");
     }
@@ -74,6 +73,8 @@ function AddProducts() {
     const payload = Object.fromEntries(data.entries());
     console.log(payload);
     console.log(JSON.stringify(payload));
+    //empty all string///////////
+
     const requestOptions = {
       method: "POST",
       body: JSON.stringify(payload),
@@ -88,17 +89,41 @@ function AddProducts() {
       .then((data) => {
         console.log(data);
       });
+
+    setShouldRender(true);
   };
+
+  useEffect(() => {
+    if (shouldRender) {
+      setShouldRender(false);
+      setTitle("");
+      setprice("");
+      setdescription("");
+      setimage("");
+      setStock("");
+      setSelected("");
+      setShipping("");
+      setCategory(null);
+    }
+  }, [setShouldRender]);
 
   const onChange = (e, id) => {
     const name = e.target.value;
     let selectedSize = selected;
+    let checked = e.target.checked;
     let find = selectedSize.indexOf(id);
 
-    if (find > -1) {
-      selectedSize.splice(find, 1);
-    } else {
+    // if (find > -1) {
+    //   selectedSize.splice(find, 1);
+    // } else {
+    //   selectedSize.push(name);
+    // }
+
+    if (checked) {
       selectedSize.push(name);
+    } else {
+      var index = selectedSize.indexOf(name);
+      selectedSize.splice(index, 1);
     }
 
     let filteredArray = selectedSize.filter(function (item, pos) {
@@ -107,6 +132,7 @@ function AddProducts() {
 
     setSelected(filteredArray);
     // setSelected(selectedSize);
+    console.log(filteredArray);
     console.log(selectedSize);
   };
 
@@ -174,9 +200,11 @@ function AddProducts() {
             <Form.Field>
               <Label size="big">Choose Category</Label>
               <select
-                onChange={(e) => setCategory(e.target.value)}
+                required
+                onChange={(e) => setCategory(e.target.value) || null}
                 className="browser-default custom-select"
               >
+                <option value="">Please Select</option>
                 {categoryOptions.map((i) => {
                   return (
                     <option key={i.id} value={i.id} name="category">
@@ -211,7 +239,6 @@ function AddProducts() {
               <Label size="big">Image</Label>
               <Input
                 type="file"
-                name="image"
                 onChange={(e) => setimage(e.target.files[0])}
                 multiple="multiple"
                 placeholder="select image"
