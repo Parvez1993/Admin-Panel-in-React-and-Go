@@ -1,8 +1,19 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import {
+  Form,
+  Input,
+  Button,
+  Container,
+  Header,
+  Icon,
+} from "semantic-ui-react";
+import { useUserContext } from "../contextapi";
 function Adminlogin() {
-  const [emal, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const { user, setUser } = useUserContext();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
@@ -15,25 +26,48 @@ function Adminlogin() {
     await fetch("http://localhost:4000//v1/signin", requestOptions)
       .then((response) => response.json())
       .then((data) => {
+        setUser(Object.values(data)[0]);
         console.log(data);
+      })
+      .then((data) => {
+        setEmail("");
+        setPassword("");
+      })
+      .then(() => {
+        navigate("/");
       });
   };
+  console.log(user);
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        name="email"
-        placeholder="email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button>Submit</button>
-    </form>
+    <Container>
+      <Header as="h2" icon>
+        <Icon name="settings" />
+        Account Settings
+        <Header.Subheader></Header.Subheader>
+      </Header>
+      <Form onSubmit={handleSubmit}>
+        <Form.Field>
+          <input
+            type="email"
+            name="email"
+            value={email}
+            placeholder="email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field>
+          <input
+            type="password"
+            name="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Form.Field>
+
+        <Button>Submit</Button>
+      </Form>
+    </Container>
   );
 }
 

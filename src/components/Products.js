@@ -3,11 +3,13 @@ import { Alert } from "bootstrap";
 import React, { useEffect, useState } from "react";
 import { Col, Container, ListGroup, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useUserContext } from "../contextapi";
 import List from "./List";
 
 function Products() {
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
+  const { user } = useUserContext();
 
   useEffect(() => {
     // const res = axios
@@ -24,24 +26,30 @@ function Products() {
   console.log(products);
 
   return (
-    <Container>
-      <Row class="py-5">
-        <Col lg={3}>
-          <List />
-        </Col>
-        <Col lg={6}>
-          {products
-            ? products.map((i) => {
-                return (
-                  <Link to={`/product/${i.id}`}>
-                    <li>{i.title}</li>
-                  </Link>
-                );
-              })
-            : "no"}
-        </Col>
-      </Row>
-    </Container>
+    <>
+      {user ? (
+        <Container>
+          <Row class="py-5">
+            <Col lg={3}>
+              <List />
+            </Col>
+            <Col lg={6}>
+              {products
+                ? products.map((i) => {
+                    return (
+                      <Link to={`/product/${i.id}`}>
+                        <li>{i.title}</li>
+                      </Link>
+                    );
+                  })
+                : "no"}
+            </Col>
+          </Row>
+        </Container>
+      ) : (
+        "Login first"
+      )}
+    </>
   );
 }
 

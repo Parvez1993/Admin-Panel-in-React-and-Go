@@ -11,6 +11,7 @@ import {
   Select,
   TextArea,
 } from "semantic-ui-react";
+import { useUserContext } from "../contextapi";
 import List from "./List";
 
 function AddProducts() {
@@ -50,7 +51,7 @@ function AddProducts() {
     { id: "2", value: "Women", text: "Women" },
   ];
 
-  console.log(category);
+  const { user, setUser } = useUserContext();
   const handleSubmit = async (e) => {
     if (
       title === "" &&
@@ -74,10 +75,14 @@ function AddProducts() {
     console.log(payload);
     console.log(JSON.stringify(payload));
     //empty all string///////////
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer " + user);
 
     const requestOptions = {
       method: "POST",
       body: JSON.stringify(payload),
+      headers: myHeaders,
     };
 
     data.append("image", image);
@@ -136,6 +141,9 @@ function AddProducts() {
     console.log(selectedSize);
   };
 
+  if (user === "") {
+    return <h3>login First </h3>;
+  }
   //category
   return (
     <Container>

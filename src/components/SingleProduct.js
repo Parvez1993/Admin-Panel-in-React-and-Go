@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Radio } from "semantic-ui-react";
+import { useUserContext } from "../contextapi";
 
 function SingleProduct() {
   const [products, setProducts] = useState("");
@@ -42,6 +43,8 @@ function SingleProduct() {
     { id: "2", value: "Women", text: "Women" },
   ];
 
+  //user, setUser
+  const { user } = useUserContext();
   //bootstrap
   const [show, setShow] = useState(false);
 
@@ -81,9 +84,14 @@ function SingleProduct() {
     data.append("size", selected);
     data.append("category", category);
     const payload = Object.fromEntries(data.entries());
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer " + user);
     const requestOptions = {
       method: "POST",
       body: JSON.stringify(payload),
+      headers: myHeaders,
     };
 
     data.append("image", newImage);

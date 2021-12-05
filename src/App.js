@@ -10,6 +10,7 @@ import AddProducts from "./components/AddProducts";
 import "semantic-ui-css/semantic.min.css";
 import Adminlogin from "./components/Adminlogin";
 import Error from "./components/Error";
+import AdminPrivateRoute from "./AdminPrivateRoute";
 function App() {
   return (
     <BrowserRouter>

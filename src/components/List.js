@@ -1,8 +1,20 @@
 import React from "react";
 import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useUserContext } from "../contextapi";
+import { useNavigate } from "react-router-dom";
 
 function List() {
+  const { user, setUser } = useUserContext();
+  const navigate = useNavigate;
+  const logout = async () => {
+    try {
+      await setUser("");
+      navigate("/login");
+    } catch (error) {
+      console.log("error");
+    }
+  };
   return (
     <ListGroup>
       <ListGroup.Item>
@@ -16,6 +28,13 @@ function List() {
       </ListGroup.Item>
       <ListGroup.Item>
         <Link to="/category">Category</Link>
+      </ListGroup.Item>
+      <ListGroup.Item>
+        {user.length > 1 ? (
+          <button onClick={logout}>Logout</button>
+        ) : (
+          <Link to="/login">login</Link>
+        )}
       </ListGroup.Item>
     </ListGroup>
   );
