@@ -27,7 +27,10 @@ function Adminlogin() {
       .then((response) => response.json())
       .then((data) => {
         setUser(Object.values(data)[0]);
-        console.log(data);
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify(Object.values(data)[0])
+        );
       })
       .then((data) => {
         setEmail("");

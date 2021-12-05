@@ -10,6 +10,7 @@ function List() {
   const logout = async () => {
     try {
       await setUser("");
+      window.localStorage.removeItem("user");
       navigate("/login");
     } catch (error) {
       console.log("error");

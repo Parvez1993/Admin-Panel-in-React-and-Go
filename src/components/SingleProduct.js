@@ -33,6 +33,7 @@ function SingleProduct() {
   const [sizes, setSizes] = useState("");
 
   const [selected, setSelected] = useState([]);
+  const [newSelected, setNewSelected] = useState([]);
   const [category, setCategory] = useState("");
 
   //render
@@ -81,7 +82,9 @@ function SingleProduct() {
     const data = new FormData(e.target);
 
     data.append("id", id);
-    data.append("size", selected);
+    if (newSelected) {
+      data.append("size", newSelected);
+    }
     data.append("category", category);
     const payload = Object.fromEntries(data.entries());
 
@@ -154,7 +157,7 @@ function SingleProduct() {
       return selectedSize.indexOf(item) === pos;
     });
 
-    setSelected(filteredArray);
+    setNewSelected(filteredArray);
     // setSelected(selectedSize);
     console.log(filteredArray);
     console.log(selectedSize);
@@ -214,6 +217,7 @@ function SingleProduct() {
                     name="description"
                   ></input>
                 </h1>
+                {/* ======================================sizes========================================== */}
                 <h1>
                   Sizes: <span> {sizes ? sizes.map((i) => i) : "loading"}</span>
                 </h1>
@@ -223,6 +227,7 @@ function SingleProduct() {
                     type="checkbox"
                     value="x"
                     name="x"
+                    selected={selected.includes("x")}
                     onChange={onChangeCheckbox}
                     disabled={disabled}
                   ></input>
@@ -233,6 +238,7 @@ function SingleProduct() {
                     type="checkbox"
                     value="l"
                     name="l"
+                    selected={selected.includes("l")}
                     onChange={onChangeCheckbox}
                     disabled={disabled}
                   ></input>
@@ -243,6 +249,7 @@ function SingleProduct() {
                     type="checkbox"
                     value="m"
                     name="m"
+                    selected={selected.includes("m")}
                     onChange={onChangeCheckbox}
                     disabled={disabled}
                   ></input>
